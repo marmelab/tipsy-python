@@ -1,17 +1,24 @@
 import networkx as nx
 
+
 class Board:
-    width=7
-    height=7
+    width = 7
+    height = 7
+    [WEST, NORTH, EAST, SOUTH] = ["west","north","east","south"]
 
     def __init__(self):
         self.graph = nx.Graph()
-        self.graph.add_nodes_from(
-            [(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(0,6),
-            (1,0),(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),
-            (2,0),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),
-            (3,0),(3,1),(3,2),(3,3),(3,4),(3,5),(3,6),
-            (4,0),(4,1),(4,2),(4,3),(4,4),(4,5),(4,6),
-            (5,0),(5,1),(5,2),(5,3),(5,4),(5,5),(5,6),
-            (6,0),(6,1),(6,2),(6,3),(6,4),(6,5),(6,6)
-        ])
+
+        for x in range(Board.width):
+            for y in range(Board.height):
+                self.graph.add_node((x, y))
+
+        for (x, y) in self.graph.nodes:
+            if (x > 0):
+                self.graph.add_edge((x, y), (x-1, y), direction=Board.WEST)
+            if (x < Board.width - 1):
+                self.graph.add_edge((x, y), (x+1, y), direction=Board.EAST)
+            if (y > 0):
+                self.graph.add_edge((x, y), (x, y-1), direction=Board.SOUTH)
+            if (y < Board.height - 1):
+                self.graph.add_edge((x, y), (x, y+1), direction=Board.NORTH)

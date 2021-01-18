@@ -9,3 +9,6 @@ run: ## Run the game.
 
 test: ## Run the tests
 	$(DOCKER) python3 -m unittest 
+
+local-test: ## Run the tests on local machine
+	python -m unittest
