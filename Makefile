@@ -8,4 +8,4 @@ run: ## Run the game.
 	$(DOCKER) python3 ./tipsy.py
 
 test: ## Run the tests
-	## TODO
+	$(DOCKER) python3 -m unittest 
