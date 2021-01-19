@@ -6,7 +6,7 @@ Tipsy is a game were the board can be tilt to move puck out of it. The aime is t
 
 ## How to install
 
-``` 
+```
 make install
 ```
 
@@ -14,4 +14,10 @@ make install
 
 ```
 make run
+```
+
+## How to test
+
+```
+make test
 ```
