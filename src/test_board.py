@@ -64,6 +64,21 @@ class TestBoard(unittest.TestCase):
             self.assertNotIn(northest_neighbor,
                              current_node_neighbors)
 
+    def test_empty_board_middle_node_should_have_upper_lower_right_and_left_neighbours(self):
+        # GIVEN
+        board = Board(3, 3)
+
+        # THEN
+        middle_node = (1, 1)
+        east_node = (2, 1)
+        south_node = (1, 2)
+        west_node = (0, 1)
+        north_node = (1, 0)
+
+        self.assertEqual(board.graph[middle_node][east_node]["direction"], Board.EAST)
+        self.assertEqual(board.graph[middle_node][south_node]["direction"], Board.SOUTH)
+        self.assertEqual(board.graph[middle_node][west_node]["direction"], Board.WEST)
+        self.assertEqual(board.graph[middle_node][north_node]["direction"], Board.NORTH)
 
 if __name__ == '__main__':
     unittest.main()
