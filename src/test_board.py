@@ -10,14 +10,14 @@ class TestBoard(unittest.TestCase):
 
         # THEN
         self.assertEqual(board.graph.number_of_nodes(),
-                         Board.width * Board.height)
+                         board.WIDTH * board.HEIGHT)
 
     def test_empty_board_left_borders_should_have_no_left_neighbours(self):
         # GIVEN
         board = Board()
 
         # THEN
-        for y in range(Board.height):
+        for y in range(board.HEIGHT):
             current_node_neighbors = board.graph.neighbors(
                 (0, y))
             left_neighbor = (-1, y)
@@ -30,10 +30,10 @@ class TestBoard(unittest.TestCase):
         board = Board()
 
         # THEN
-        for y in range(Board.height):
+        for y in range(board.HEIGHT):
             current_node_neighbors = board.graph.neighbors(
-                (Board.width - 1, y))
-            right_neighbor = (Board.height, y)
+                (board.WIDTH - 1, y))
+            right_neighbor = (board.HEIGHT, y)
 
             self.assertNotIn(right_neighbor,
                              current_node_neighbors)
@@ -43,7 +43,7 @@ class TestBoard(unittest.TestCase):
         board = Board()
 
         # THEN
-        for x in range(Board.width):
+        for x in range(board.WIDTH):
             current_node_neighbors = board.graph.neighbors(
                 (x, 0))
             northest_neighbor = (x, -1)
@@ -56,10 +56,10 @@ class TestBoard(unittest.TestCase):
         board = Board()
 
         # THEN
-        for x in range(Board.width):
+        for x in range(board.WIDTH):
             current_node_neighbors = board.graph.neighbors(
-                (x, Board.height-1))
-            northest_neighbor = (x, Board.height)
+                (x, board.HEIGHT-1))
+            northest_neighbor = (x, board.HEIGHT)
 
             self.assertNotIn(northest_neighbor,
                              current_node_neighbors)
