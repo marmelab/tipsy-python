@@ -22,3 +22,13 @@ class Board:
                 self.graph.add_edge((x, y), (x, y-1), direction=Board.SOUTH)
             if (y < self.HEIGHT - 1):
                 self.graph.add_edge((x, y), (x, y+1), direction=Board.NORTH)
+
+    def display(self):
+        print('# '*(self.WIDTH+2))
+        for j in range(self.HEIGHT):
+            line = '# '
+            for i in range(self.WIDTH):
+                line+='  '
+            line+='#'
+            print(line)
+        print('# '*(self.WIDTH+2))

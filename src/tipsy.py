@@ -1,1 +1,5 @@
-print('Hello World')
+from board import Board
+
+board = Board()
+
+board.display()
