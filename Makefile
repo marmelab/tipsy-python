@@ -8,7 +8,7 @@ run: ## Run the game.
 	$(DOCKER) python3 ./tipsy.py
 
 test: ## Run the tests
-	$(DOCKER) python3 -m unittest 
+	$(DOCKER) python3 -m unittest -v
 
 local-test: ## Run the tests on local machine
 	python -m unittest
