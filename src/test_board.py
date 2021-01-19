@@ -104,6 +104,115 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(board.graph[middle_node]
                          [north_node]["direction"], Board.NORTH)
 
+    def test_get_next_right_free_node(self):
+        # GIVEN
+        board = Board()
+        expected_puck_position = (board.WIDTH-1, board.HEIGHT//2)
+        current_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+
+        # WHEN
+        next_puck_position = board._Board__get_next_free_node(
+            current_puck_position, Board.EAST)
+
+        # THEN
+        self.assertEqual(expected_puck_position, next_puck_position)
+
+    def test_get_next_left_free_node(self):
+        # GIVEN
+        board = Board()
+        expected_puck_position = (0, board.HEIGHT//2)
+        current_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+
+        # WHEN
+        next_puck_position = board._Board__get_next_free_node(
+            current_puck_position, Board.WEST)
+
+        # THEN
+        self.assertEqual(expected_puck_position, next_puck_position)
+
+    def test_get_next_upper_free_node(self):
+        # GIVEN
+        board = Board()
+        expected_puck_position = (board.WIDTH//2, 0)
+        current_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+
+        # WHEN
+        next_puck_position = board._Board__get_next_free_node(
+            current_puck_position, Board.NORTH)
+
+        # THEN
+        self.assertEqual(expected_puck_position, next_puck_position)
+
+    def test_get_next_lower_free_node(self):
+        # GIVEN
+        board = Board()
+        expected_puck_position = (board.WIDTH//2, board.HEIGHT-1)
+        current_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+
+        # WHEN
+        next_puck_position = board._Board__get_next_free_node(
+            current_puck_position, Board.SOUTH)
+
+        # THEN
+        self.assertEqual(expected_puck_position, next_puck_position)
+
+    def test_move_puck_to_up(self):
+        #GIVEN
+        board= Board()
+        initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+        expected_puck_position = (board.WIDTH//2, 0)
+
+        #WHEN
+        board._Board__move_puck_to(initial_puck_position, Board.NORTH)
+
+        #THEN
+        pucks = [node for node, attributes in board.graph.nodes(data=True) if attributes.get('puck')]
+        self.assertIn(expected_puck_position, pucks)
+        self.assertNotIn(initial_puck_position, pucks)
+
+
+    def test_move_puck_to_left(self):
+        #GIVEN
+        board= Board()
+        initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+        expected_puck_position = (0, board.HEIGHT//2)
+
+        #WHEN
+        board._Board__move_puck_to(initial_puck_position, Board.WEST)
+
+        #THEN
+        pucks = [node for node, attributes in board.graph.nodes(data=True) if attributes.get('puck')]
+        self.assertIn(expected_puck_position, pucks)
+        self.assertNotIn(initial_puck_position, pucks)
+
+    def test_move_puck_to_right(self):
+        #GIVEN
+        board= Board()
+        initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+        expected_puck_position = (board.WIDTH-1, board.HEIGHT//2)
+
+        #WHEN
+        board._Board__move_puck_to(initial_puck_position, Board.EAST)
+
+        #THEN
+        pucks = [node for node, attributes in board.graph.nodes(data=True) if attributes.get('puck')]
+        self.assertIn(expected_puck_position, pucks)
+        self.assertNotIn(initial_puck_position, pucks)
+
+
+    def test_move_puck_to_down(self):
+        #GIVEN
+        board= Board()
+        initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+        expected_puck_position = (board.WIDTH//2, board.HEIGHT-1)
+
+        #WHEN
+        board._Board__move_puck_to(initial_puck_position, Board.SOUTH)
+
+        #THEN
+        pucks = [node for node, attributes in board.graph.nodes(data=True) if attributes.get('puck')]
+        self.assertIn(expected_puck_position, pucks)
+        self.assertNotIn(initial_puck_position, pucks)
 
 if __name__ == '__main__':
     unittest.main()
