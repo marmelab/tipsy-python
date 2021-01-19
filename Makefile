@@ -5,7 +5,10 @@ install: ## Build the docker container
 	docker build -t tipsy-python .
 
 run: ## Run the game.
-	$(DOCKER) python3 ./main.py
+	$(DOCKER) python3 ./tipsy.py
 
 test: ## Run the tests
-	## TODO
+	$(DOCKER) python3 -m unittest -v
+
+local-test: ## Run the tests on local machine
+	python -m unittest

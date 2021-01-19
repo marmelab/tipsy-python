@@ -130,3 +130,5 @@ dmypy.json
 
 # VSCODE History plugin
 .history/
+
+.vscode
