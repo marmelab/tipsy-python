@@ -214,5 +214,20 @@ class TestBoard(unittest.TestCase):
         self.assertIn(expected_puck_position, pucks)
         self.assertNotIn(initial_puck_position, pucks)
 
+    def test_tilt_board_twice_in_the_same_direction(self):
+        #GIVEN
+        board= Board()
+        initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
+        expected_puck_position = (board.WIDTH//2, board.HEIGHT-1)
+
+        #WHEN
+        board.tilt(Board.SOUTH)
+        board.tilt(Board.SOUTH)
+
+        #THEN
+        pucks = [node for node, attributes in board.graph.nodes(data=True) if attributes.get('puck')]
+        self.assertIn(expected_puck_position, pucks)
+        self.assertNotIn(initial_puck_position, pucks)
+
 if __name__ == '__main__':
     unittest.main()
