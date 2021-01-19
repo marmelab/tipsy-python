@@ -12,6 +12,26 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(board.graph.number_of_nodes(),
                          board.WIDTH * board.HEIGHT)
 
+    def test_node_with_puck_on_it_should_have_puck_attribute(self):
+        # GIVEN
+        board = Board()
+        known_node_with_puck = (board.WIDTH//2, board.HEIGHT//2)
+
+        # THEN
+        nodes_with_puck_attribute = [node for node, data in board.graph.nodes(
+            data=True) if data.get('puck')]
+        self.assertIn(known_node_with_puck, nodes_with_puck_attribute)
+
+    def test_node_without_puck_on_it_should_not_have_puck_attribute(self):
+        # GIVEN
+        board = Board()
+        known_node_with_puck = (board.WIDTH//2, board.HEIGHT//2)
+
+        # THEN
+        nodes_with_no_puck_attribute = [node for node, data in board.graph.nodes(
+            data=True) if not data.get('puck')]
+        self.assertNotIn(known_node_with_puck, nodes_with_no_puck_attribute)
+
     def test_empty_board_left_borders_should_have_no_left_neighbours(self):
         # GIVEN
         board = Board()
@@ -75,10 +95,15 @@ class TestBoard(unittest.TestCase):
         west_node = (0, 1)
         north_node = (1, 0)
 
-        self.assertEqual(board.graph[middle_node][east_node]["direction"], Board.EAST)
-        self.assertEqual(board.graph[middle_node][south_node]["direction"], Board.SOUTH)
-        self.assertEqual(board.graph[middle_node][west_node]["direction"], Board.WEST)
-        self.assertEqual(board.graph[middle_node][north_node]["direction"], Board.NORTH)
+        self.assertEqual(board.graph[middle_node]
+                         [east_node]["direction"], Board.EAST)
+        self.assertEqual(board.graph[middle_node]
+                         [south_node]["direction"], Board.SOUTH)
+        self.assertEqual(board.graph[middle_node]
+                         [west_node]["direction"], Board.WEST)
+        self.assertEqual(board.graph[middle_node]
+                         [north_node]["direction"], Board.NORTH)
+
 
 if __name__ == '__main__':
     unittest.main()
