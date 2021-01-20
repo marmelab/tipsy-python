@@ -1,6 +1,7 @@
 from board import Board
 from os import system
 
+
 class Game:
     def __init__(self):
         self.board = Board()
@@ -10,10 +11,11 @@ class Game:
         while True:
             system('clear')
             self.display_board()
+            self.display_instructions()
             input_command = ''
-
             while (input_command.lower() not in [Board.EAST, Board.WEST, Board.NORTH, Board.SOUTH]):
-                input_command = input('Use ' + Board.NORTH + ', ' + Board.SOUTH + ', ' + Board.EAST + ', ' + Board.WEST + ' to tilt the board: ')
+                input_command = input('Use ' + Board.NORTH + ', ' + Board.SOUTH +
+                                      ', ' + Board.EAST + ', ' + Board.WEST + ' to tilt the board: ')
             print('move to ' + input_command)
 
             self.board.tilt(input_command)
@@ -31,7 +33,6 @@ class Game:
             print(line)
         print('# '*(self.board.WIDTH+2))
 
-
     def display_title(self):
         print("    .    o8o")
         print("  .o8    `\"'")
@@ -45,3 +46,10 @@ class Game:
         print("")
         print("")
         input("Welcome to Tipsy game. Type Enter to start")
+
+    def display_instructions(self):
+        print("     ^")
+        print("     n")
+        print(" < w * e >")
+        print("     s")
+        print("     v")
