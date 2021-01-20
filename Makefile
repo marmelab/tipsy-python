@@ -11,4 +11,4 @@ test: ## Run the tests
 	$(DOCKER) python3 -m unittest -v
 
 local-test: ## Run the tests on local machine
-	python -m unittest
+	python3 -m unittest discover -s ./src -v
