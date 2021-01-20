@@ -1,0 +1,15 @@
+language: python
+
+python:
+  - "3.9"
+
+services:
+  - docker
+
+install: make install
+
+script: make test
+
+branches:
+  only:
+    - main
