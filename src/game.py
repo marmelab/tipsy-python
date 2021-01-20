@@ -8,21 +8,40 @@ class Game:
     PUCK = 'o '
 
     def __init__(self):
+        self.pucks = 1
         self.board = Board()
 
     def start(self):
         system('clear')
         self.display_title()
+        win = False
         while True:
             system('clear')
             print(self.draw_board())
+            if self.__check_win():
+                self.__display_winner()
+                break
             self.display_instructions()
             input_command = ''
             while (input_command.lower() not in [Board.EAST, Board.WEST, Board.NORTH, Board.SOUTH]):
                 input_command = input('Use ' + Board.NORTH + ', ' + Board.SOUTH +
                                       ', ' + Board.EAST + ', ' + Board.WEST + ' to tilt the board: ')
 
-            self.board.tilt(input_command)
+            fallen_pucks = self.board.tilt(input_command)
+            self.pucks -= fallen_pucks
+
+
+    def __check_win(self):
+        return self.pucks <= 0
+
+    def __display_winner(self):
+        print("oooooo   oooo                                            o8o              .o.")
+        print(" `888.   .8'                                             `\"'              888")
+        print("  `888. .8'    .ooooo.  oooo  oooo     oooo oooo    ooo oooo  ooo. .oo.   888")
+        print("   `888.8'    d88' `88b `888  `888      `88. `88.  .8'  `888  `888P\"Y88b  Y8P")
+        print("    `888'     888   888  888   888       `88..]88..8'    888   888   888  `8'")
+        print("     888      888   888  888   888        `888'`888'     888   888   888  .o.")
+        print("    o888o     `Y8bod8P'  `V88V\"V8P'        `8'  `8'     o888o o888o o888o Y8P")
 
     def draw_board(self):
         board = Game.OBSTACLE

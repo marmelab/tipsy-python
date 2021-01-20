@@ -86,7 +86,7 @@ class TestBoard(unittest.TestCase):
 
     def test_empty_board_middle_node_should_have_upper_lower_right_and_left_neighbours(self):
         # GIVEN
-        board = Board(3, 3, obstacles=[], exits=[])
+        board = Board(3, 3, obstacles=[], exits=[], pucks=[])
 
         # THEN
         middle_node = (1, 1)
@@ -315,6 +315,21 @@ class TestBoard(unittest.TestCase):
         self.assertIn(exit_node, exits)
         self.assertEqual(board.graph[lower_node]
                          [exit_node]["direction"], Board.NORTH)
+
+    def test_tilt_board_with_puck_next_to_exit_should_push_the_puck_out(self):
+        # GIVEN
+        exit_node = (1, -1)
+        puck_node = (1, 1)
+        board = Board(3,3,
+                      obstacles=[], exits=[exit_node],pucks=[puck_node])
+
+        # WHEN
+        fallen_pucks = board.tilt(Board.NORTH)
+
+        # THEN
+        self.assertEqual(fallen_pucks, 1)
+
+
 
 if __name__ == '__main__':
     unittest.main()

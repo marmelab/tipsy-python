@@ -6,19 +6,21 @@ class Board:
     # TODO check out of bounds obstacles
     DEFAULT_OBSTACLES = [(0, 3), (1, 1), (1, 5), (2, 2),
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
-    DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
+    DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7), (7, 2)]
+    DEFAULT_PUCKS = [(3, 3)]
 
-    def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS):
+    def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
         self.HEIGHT = height
         self.graph = nx.DiGraph()
         self.__initialize_empty_board()
-        self.__initialize_pucks()
+        self.__initialize_pucks(pucks)
         self.__initialize_exits(exits)
         self.__initialize_obstacles(obstacles)
 
-    def __initialize_pucks(self):
-        self.graph.nodes[(self.WIDTH//2, self.HEIGHT//2)]["puck"] = 'O'
+    def __initialize_pucks(self, pucks):
+        for puck in pucks:
+            self.__add_puck(puck)
 
     def __initialize_obstacles(self, obstacles):
         # TODO mention this in the blog note?
@@ -36,7 +38,6 @@ class Board:
                 self.graph.add_edge((i, j-1),
                                     (i, j), direction=Board.SOUTH)
             if j == -1:
-                print('exit on ' + str(i) + ' '+str(j))
                 self.graph.add_edge((i, 0),
                                     (i, j), direction=Board.NORTH)
 
@@ -57,8 +58,10 @@ class Board:
     def tilt(self, direction):
         pucks = [node for node, attributes in self.graph.nodes(
             data=True) if attributes.get('puck')]
+        fallen_pucks = 0
         for puck in pucks:
-            self.__move_puck_to(puck, direction)
+            fallen_pucks += self.__move_puck_to(puck, direction)
+        return fallen_pucks
 
     def __get_next_free_node(self, node, direction):
         next_node = [next_node for start_node, next_node, edge_attrs in self.graph.out_edges(
@@ -79,4 +82,8 @@ class Board:
         # Remove puck attribute from current node
         self.__remove_puck(node)
         # Add puck attribute in next position
-        self.__add_puck(next_free_node)
+        if self.graph.nodes[next_free_node].get('exit'):
+            return 1
+        else:
+            self.__add_puck(next_free_node)
+            return 0
