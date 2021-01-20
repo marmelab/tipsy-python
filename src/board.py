@@ -4,7 +4,7 @@ import networkx as nx
 class Board:
     [WEST, NORTH, EAST, SOUTH] = ["w", "n", "e", "s"]
     DEFAULT_OBSTACLES = [(0, 3), (1, 1), (1, 5), (2, 2),
-                         (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5),(6,3)]
+                         (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES):
         self.WIDTH = width
@@ -18,8 +18,7 @@ class Board:
         self.graph.nodes[(self.WIDTH//2, self.HEIGHT//2)]["puck"] = 'O'
 
     def __initialize_obstacles_positions(self, obstacles):
-        for obstacle in obstacles:
-            self.graph.nodes[obstacle]["obstacle"] = True
+        self.graph.remove_nodes_from(obstacles)
 
     def __initialize_empty_board(self):
         for x in range(self.WIDTH):

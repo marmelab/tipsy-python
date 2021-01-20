@@ -243,5 +243,13 @@ class TestBoard(unittest.TestCase):
         self.assertIn(expected_puck_position, pucks)
         self.assertNotIn(initial_puck_position, pucks)
 
+    def test_obstacles_should_have_no_corresponding_nodes_in_the_board(self):
+        #GIVEN
+        obstacle = (6,3)
+        board= Board(width=7,height=7,obstacles=[obstacle])
+
+        #THEN
+        self.assertFalse(board.graph.edges(obstacle))
+
 if __name__ == '__main__':
     unittest.main()

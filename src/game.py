@@ -3,6 +3,8 @@ from os import system
 
 
 class Game:
+    OBSTACLE = '# '
+    PUCK = 'o '
     def __init__(self):
         self.board = Board()
 
@@ -21,19 +23,19 @@ class Game:
             self.board.tilt(input_command)
 
     def display_board(self):
-        print('# '*(self.board.WIDTH+2))
+        print(Game.OBSTACLE*(self.board.WIDTH+2))
         for j in range(self.board.HEIGHT):
-            line = '# '
+            line = Game.OBSTACLE
             for i in range(self.board.WIDTH):
-                if (self.board.graph.nodes[(i, j)].get('puck')):
-                    line += 'o '
-                elif (self.board.graph.nodes[(i, j)].get('obstacle')):
-                    line += '# '
+                if (not self.board.graph.has_node((i, j))):
+                    line += Game.OBSTACLE
+                elif (self.board.graph.nodes[(i, j)].get('puck')):
+                    line += Game.PUCK
                 else:
                     line += '  '
             line += '#'
             print(line)
-        print('# '*(self.board.WIDTH+2))
+        print(Game.OBSTACLE*(self.board.WIDTH+2))
 
     def display_title(self):
         print("    .    o8o")
