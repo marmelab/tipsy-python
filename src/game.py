@@ -4,7 +4,9 @@ from os import system
 
 class Game:
     OBSTACLE = '# '
+    EXIT = '  '
     PUCK = 'o '
+
     def __init__(self):
         self.board = Board()
 
@@ -23,9 +25,18 @@ class Game:
             self.board.tilt(input_command)
 
     def draw_board(self):
-        board = Game.OBSTACLE*(self.board.WIDTH+2)+'\n'
+        board = Game.OBSTACLE
+        for i in range(self.board.WIDTH):
+            if self.board.graph.has_node((i, -1)) and self.board.graph.nodes[(i, -1)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
+        board += '# \n'
         for j in range(self.board.HEIGHT):
-            board += Game.OBSTACLE
+            if self.board.graph.has_node((-1, j)) and self.board.graph.nodes[(-1, j)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
             for i in range(self.board.WIDTH):
                 if (not self.board.graph.has_node((i, j))):
                     board += Game.OBSTACLE
@@ -33,8 +44,18 @@ class Game:
                     board += Game.PUCK
                 else:
                     board += '  '
-            board += Game.OBSTACLE + '\n'
-        board += Game.OBSTACLE*(self.board.WIDTH+2)
+            if self.board.graph.has_node((self.board.WIDTH, j)) and self.board.graph.nodes[(self.board.WIDTH, j)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
+            board += '\n'
+        board += Game.OBSTACLE
+        for i in range(self.board.WIDTH):
+            if self.board.graph.has_node((i, self.board.HEIGHT)) and self.board.graph.nodes[(i, self.board.HEIGHT)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
+        board += '# '
         return board
 
     def display_title(self):

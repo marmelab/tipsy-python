@@ -3,9 +3,10 @@ import networkx as nx
 
 class Board:
     [WEST, NORTH, EAST, SOUTH] = ["w", "n", "e", "s"]
+    # TODO check out of bounds obstacles
     DEFAULT_OBSTACLES = [(0, 3), (1, 1), (1, 5), (2, 2),
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
-    DEFAULT_EXITS = [(1, 0), (6, 1), (0, 5), (5, 6)]
+    DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS):
         self.WIDTH = width
@@ -20,10 +21,24 @@ class Board:
         self.graph.nodes[(self.WIDTH//2, self.HEIGHT//2)]["puck"] = 'O'
 
     def __initialize_obstacles(self, obstacles):
+        # TODO mention this in the blog note?
         self.graph.remove_nodes_from(obstacles)
 
     def __initialize_exits(self, exits):
-        self.graph.add_nodes_from(exits)
+        for (i, j) in exits:
+            self.graph.add_node((i, j), exit=True)
+            if i == -1:
+                self.graph.add_edge((0, j), (i, j), direction=Board.WEST)
+            if i == self.WIDTH:
+                self.graph.add_edge((self.WIDTH-1, j),
+                                    (i, j), direction=Board.EAST)
+            if j == self.HEIGHT:
+                self.graph.add_edge((i, j-1),
+                                    (i, j), direction=Board.SOUTH)
+            if j == -1:
+                print('exit on ' + str(i) + ' '+str(j))
+                self.graph.add_edge((i, 0),
+                                    (i, j), direction=Board.NORTH)
 
     def __initialize_empty_board(self):
         for x in range(self.WIDTH):
