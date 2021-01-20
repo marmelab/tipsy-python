@@ -13,7 +13,7 @@ class Game:
         self.display_title()
         while True:
             system('clear')
-            self.display_board()
+            print(self.draw_board())
             self.display_instructions()
             input_command = ''
             while (input_command.lower() not in [Board.EAST, Board.WEST, Board.NORTH, Board.SOUTH]):
@@ -22,20 +22,20 @@ class Game:
 
             self.board.tilt(input_command)
 
-    def display_board(self):
-        print(Game.OBSTACLE*(self.board.WIDTH+2))
+    def draw_board(self):
+        board = Game.OBSTACLE*(self.board.WIDTH+2)+'\n'
         for j in range(self.board.HEIGHT):
-            line = Game.OBSTACLE
+            board += Game.OBSTACLE
             for i in range(self.board.WIDTH):
                 if (not self.board.graph.has_node((i, j))):
-                    line += Game.OBSTACLE
+                    board += Game.OBSTACLE
                 elif (self.board.graph.nodes[(i, j)].get('puck')):
-                    line += Game.PUCK
+                    board += Game.PUCK
                 else:
-                    line += '  '
-            line += '#'
-            print(line)
-        print(Game.OBSTACLE*(self.board.WIDTH+2))
+                    board += '  '
+            board += Game.OBSTACLE + '\n'
+        board += Game.OBSTACLE*(self.board.WIDTH+2)
+        return board
 
     def display_title(self):
         print("    .    o8o")
