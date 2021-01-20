@@ -2,7 +2,7 @@ import unittest
 from game import Game
 
 
-class TestBoard(unittest.TestCase):
+class TestGame(unittest.TestCase):
 
     def test_empty_board_display_should_display_only_border_and_puck(self):
         # GIVEN
