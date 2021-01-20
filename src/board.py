@@ -8,6 +8,7 @@ class Board:
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7), (7, 2)]
     DEFAULT_PUCKS = [(3, 3)]
+    PUCK_EXITS = 'puck_exit'
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
@@ -60,7 +61,8 @@ class Board:
             data=True) if attributes.get('puck')]
         fallen_pucks = 0
         for puck in pucks:
-            fallen_pucks += self.__move_puck_to(puck, direction)
+            if self.__move_puck_to(puck, direction) == Board.PUCK_EXITS:
+                fallen_pucks += 1
         return fallen_pucks
 
     def __get_next_free_node(self, node, direction):
@@ -85,7 +87,6 @@ class Board:
         self.__remove_puck(node)
         # Add puck attribute in next position
         if self.graph.nodes[next_free_node].get('exit'):
-            return 1
+            return Board.PUCK_EXITS
         else:
             self.__add_puck(next_free_node)
-            return 0
