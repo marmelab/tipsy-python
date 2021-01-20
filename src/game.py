@@ -7,6 +7,7 @@ class Game:
         self.board = Board()
 
     def start(self):
+        system('clear')
         self.display_title()
         while True:
             system('clear')
