@@ -3,12 +3,12 @@ import networkx as nx
 
 class Board:
     [WEST, NORTH, EAST, SOUTH] = ["w", "n", "e", "s"]
-    # TODO check out of bounds obstacles
     DEFAULT_OBSTACLES = [(0, 3), (1, 1), (1, 5), (2, 2),
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
-    DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7), (7, 2)]
-    DEFAULT_PUCKS = [(3, 3)]
     PUCK_EXITS = 'puck_exit'
+    DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
+    DEFAULT_PUCKS = {'blue': [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
+                     'red': [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)]}
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
@@ -20,8 +20,10 @@ class Board:
         self.__initialize_obstacles(obstacles)
 
     def __initialize_pucks(self, pucks):
-        for puck in pucks:
-            self.__add_puck(puck)
+        for puck in pucks['blue']:
+            self.__add_puck(puck, 'blue')
+        for puck in pucks['red']:
+            self.__add_puck(puck, 'red')
 
     def __initialize_obstacles(self, obstacles):
         # TODO mention this in the blog note?
@@ -74,17 +76,19 @@ class Board:
 
     def __remove_puck(self, node):
         if self.graph.has_node(node):
+            puck_color = self.graph.nodes[node].get('puck')
             del self.graph.nodes[node]['puck']
+            return puck_color
 
-    def __add_puck(self, node):
+    def __add_puck(self, node, color):
         if self.graph.has_node(node):
-            self.graph.nodes[node]["puck"] = 'o'
+            self.graph.nodes[node]["puck"] = color
 
     def __move_puck_to(self, node, direction):
         # Get next position of puck
         next_free_node = self.__get_next_free_node(node, direction)
         # Remove puck attribute from current node
-        self.__remove_puck(node)
+        puck_color = self.__remove_puck(node)
         # Add puck attribute in next position
         if self.graph.nodes[next_free_node].get('exit'):
             return Board.PUCK_EXITS

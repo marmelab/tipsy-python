@@ -5,7 +5,7 @@ from os import system
 class Game:
     OBSTACLE = '# '
     EXIT = '  '
-    PUCK = 'o '
+    PUCK = {'red':'O ','blue':'0 '}
 
     def __init__(self):
         self.pucks = 1
@@ -59,7 +59,7 @@ class Game:
                 if (not self.board.graph.has_node((i, j))):
                     board += Game.OBSTACLE
                 elif (self.board.graph.nodes[(i, j)].get('puck')):
-                    board += Game.PUCK
+                    board += Game.PUCK[self.board.graph.nodes[(i, j)].get('puck')]
                 else:
                     board += '  '
             if self.board.graph.has_node((self.board.WIDTH, j)) and self.board.graph.nodes[(self.board.WIDTH, j)].get('exit'):

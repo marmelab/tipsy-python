@@ -14,7 +14,7 @@ class TestBoard(unittest.TestCase):
 
     def test_node_with_puck_on_it_should_have_puck_attribute(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
+        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
         known_node_with_puck = (board.WIDTH//2, board.HEIGHT//2)
 
         # THEN
@@ -24,7 +24,7 @@ class TestBoard(unittest.TestCase):
 
     def test_node_without_puck_on_it_should_not_have_puck_attribute(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
+        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
         known_node_with_puck = (board.WIDTH//2, board.HEIGHT//2)
 
         # THEN
@@ -86,7 +86,7 @@ class TestBoard(unittest.TestCase):
 
     def test_empty_board_middle_node_should_have_upper_lower_right_and_left_neighbours(self):
         # GIVEN
-        board = Board(3, 3, obstacles=[], exits=[], pucks=[])
+        board = Board(3, 3, obstacles=[], exits=[], pucks={'blue':[],'red':[]})
 
         # THEN
         middle_node = (1, 1)
@@ -158,9 +158,9 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_up(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
-        initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
-        expected_puck_position = (board.WIDTH//2, 0)
+        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        initial_puck_position = (3, 3)
+        expected_puck_position = (3, 0)
 
         # WHEN
         board._Board__move_puck_to(initial_puck_position, Board.NORTH)
@@ -173,7 +173,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_left(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
+        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (0, board.HEIGHT//2)
 
@@ -188,7 +188,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_right(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
+        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (board.WIDTH-1, board.HEIGHT//2)
 
@@ -203,7 +203,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_down(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
+        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (board.WIDTH//2, board.HEIGHT-1)
 
@@ -234,7 +234,7 @@ class TestBoard(unittest.TestCase):
 
     def test_puck_should_be_stopped_by_obstacle_when_moved_toward_it(self):
         # GIVEN
-        board = Board(width=7, height=7, obstacles=[(6, 3)], exits=[])
+        board = Board(width=7, height=7, obstacles=[(6, 3)], exits=[], pucks={'blue':[(3, 3)],'red':[]})
         initial_puck_position = (3, 3)
         expected_puck_position = (5, 3)
 
@@ -321,7 +321,7 @@ class TestBoard(unittest.TestCase):
         exit_node = (1, -1)
         puck_node = (1, 1)
         board = Board(3, 3,
-                      obstacles=[], exits=[exit_node], pucks=[puck_node])
+                      obstacles=[], exits=[exit_node], pucks={'blue':[puck_node],'red':[]})
 
         # WHEN
         fallen_pucks = board.tilt(Board.NORTH)
@@ -336,23 +336,12 @@ class TestBoard(unittest.TestCase):
 
         # WHEN
         board = Board(3, 3,
-                      obstacles=[], exits=[], pucks=invalid_pucks + [valid_puck])
+                      obstacles=[], exits=[], pucks={'blue':invalid_pucks + [valid_puck],'red':[]})
 
         # THEN
         pucks = [node for node, attributes in board.graph.nodes(
             data=True) if attributes.get('puck')]
         self.assertIn(valid_puck, pucks)
-
-    def test_when_trying_to_initialize_with_obstacles_out_of_bounds_it_should_only_remove_valid_ones(self):
-        # GIVEN
-        invalid_obstacles = [(99, 12), (-25, -65)]
-        valid_obstacle = (1, 1)
-
-        # WHEN
-        board = Board(3, 3, exits=[],
-                      obstacles=invalid_obstacles + [valid_obstacle])
-        # THEN
-        self.assertFalse(board.graph.has_node(valid_obstacle))
 
     def test_when_trying_to_initialize_with_obstacles_out_of_bounds_it_should_only_remove_valid_ones(self):
         # GIVEN
