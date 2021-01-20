@@ -71,10 +71,12 @@ class Board:
         return node
 
     def __remove_puck(self, node):
-        del self.graph.nodes[node]['puck']
+        if self.graph.has_node(node):
+            del self.graph.nodes[node]['puck']
 
     def __add_puck(self, node):
-        self.graph.nodes[node]["puck"] = 'o'
+        if self.graph.has_node(node):
+            self.graph.nodes[node]["puck"] = 'o'
 
     def __move_puck_to(self, node, direction):
         # Get next position of puck

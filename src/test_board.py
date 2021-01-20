@@ -320,8 +320,8 @@ class TestBoard(unittest.TestCase):
         # GIVEN
         exit_node = (1, -1)
         puck_node = (1, 1)
-        board = Board(3,3,
-                      obstacles=[], exits=[exit_node],pucks=[puck_node])
+        board = Board(3, 3,
+                      obstacles=[], exits=[exit_node], pucks=[puck_node])
 
         # WHEN
         fallen_pucks = board.tilt(Board.NORTH)
@@ -329,6 +329,41 @@ class TestBoard(unittest.TestCase):
         # THEN
         self.assertEqual(fallen_pucks, 1)
 
+    def test_when_trying_to_initialize_with_pucks_out_of_the_bounds_it_should_only_add_valid_ones(self):
+        # GIVEN
+        invalid_pucks = [(99, 12), (-25, -65)]
+        valid_puck = (1, 1)
+
+        # WHEN
+        board = Board(3, 3,
+                      obstacles=[], exits=[], pucks=invalid_pucks + [valid_puck])
+
+        # THEN
+        pucks = [node for node, attributes in board.graph.nodes(
+            data=True) if attributes.get('puck')]
+        self.assertIn(valid_puck, pucks)
+
+    def test_when_trying_to_initialize_with_obstacles_out_of_bounds_it_should_only_remove_valid_ones(self):
+        # GIVEN
+        invalid_obstacles = [(99, 12), (-25, -65)]
+        valid_obstacle = (1, 1)
+
+        # WHEN
+        board = Board(3, 3, exits=[],
+                      obstacles=invalid_obstacles + [valid_obstacle])
+        # THEN
+        self.assertFalse(board.graph.has_node(valid_obstacle))
+
+    def test_when_trying_to_initialize_with_obstacles_out_of_bounds_it_should_only_remove_valid_ones(self):
+        # GIVEN
+        invalid_obstacles = [(99, 12), (-25, -65)]
+        valid_obstacle = (1, 1)
+
+        # WHEN
+        board = Board(3, 3, exits=[],
+                      obstacles=invalid_obstacles + [valid_obstacle])
+        # THEN
+        self.assertFalse(board.graph.has_node(valid_obstacle))
 
 
 if __name__ == '__main__':
