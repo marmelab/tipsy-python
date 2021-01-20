@@ -27,6 +27,8 @@ class Game:
             for i in range(self.board.WIDTH):
                 if (self.board.graph.nodes[(i, j)].get('puck')):
                     line += 'o '
+                elif (self.board.graph.nodes[(i, j)].get('obstacle')):
+                    line += '# '
                 else:
                     line += '  '
             line += '#'
