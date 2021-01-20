@@ -19,7 +19,6 @@ class Board:
 
     def __initialize_obstacles_positions(self, obstacles):
         for obstacle in obstacles:
-            print(obstacle)
             self.graph.nodes[obstacle]["obstacle"] = True
 
     def __initialize_empty_board(self):
