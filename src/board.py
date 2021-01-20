@@ -5,13 +5,15 @@ class Board:
     [WEST, NORTH, EAST, SOUTH] = ["w", "n", "e", "s"]
     DEFAULT_OBSTACLES = [(0, 3), (1, 1), (1, 5), (2, 2),
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
+    DEFAULT_EXITS = [(1, 0), (6, 1), (0, 5), (5, 6)]
 
-    def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES):
+    def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS):
         self.WIDTH = width
         self.HEIGHT = height
         self.graph = nx.DiGraph()
         self.__initialize_empty_board()
         self.__initialize_pucks()
+        self.__initialize_exits(exits)
         self.__initialize_obstacles(obstacles)
 
     def __initialize_pucks(self):
@@ -19,6 +21,9 @@ class Board:
 
     def __initialize_obstacles(self, obstacles):
         self.graph.remove_nodes_from(obstacles)
+
+    def __initialize_exits(self, exits):
+        self.graph.add_nodes_from(exits)
 
     def __initialize_empty_board(self):
         for x in range(self.WIDTH):
