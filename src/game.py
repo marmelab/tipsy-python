@@ -14,7 +14,6 @@ class Game:
     def start(self):
         system('clear')
         self.display_title()
-        win = False
         while True:
             system('clear')
             print(self.draw_board())
