@@ -42,7 +42,7 @@ class Board:
 
     def __get_next_free_node(self, node, direction):
         next_node = [next_node for start_node, next_node, edge_attrs in self.graph.out_edges(
-            node, data=True) if (edge_attrs.get('direction') == direction and not self.graph.nodes[next_node].get('obstacle'))]
+            node, data=True) if (edge_attrs.get('direction') == direction)]
         if next_node:
             return self.__get_next_free_node(next_node[0], direction)
         return node
