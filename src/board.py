@@ -11,13 +11,13 @@ class Board:
         self.HEIGHT = height
         self.graph = nx.DiGraph()
         self.__initialize_empty_board()
-        self.__initialize_pucks_positions()
-        self.__initialize_obstacles_positions(obstacles)
+        self.__initialize_pucks()
+        self.__initialize_obstacles(obstacles)
 
-    def __initialize_pucks_positions(self):
+    def __initialize_pucks(self):
         self.graph.nodes[(self.WIDTH//2, self.HEIGHT//2)]["puck"] = 'O'
 
-    def __initialize_obstacles_positions(self, obstacles):
+    def __initialize_obstacles(self, obstacles):
         self.graph.remove_nodes_from(obstacles)
 
     def __initialize_empty_board(self):
