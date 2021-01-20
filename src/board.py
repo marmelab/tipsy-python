@@ -28,19 +28,6 @@ class Board:
                     self.graph.add_edge(
                         (x, y), (x, y+1), direction=Board.SOUTH)
 
-    def display(self):
-        print('# '*(self.WIDTH+2))
-        for j in range(self.HEIGHT):
-            line = '# '
-            for i in range(self.WIDTH):
-                if (self.graph.nodes[(i, j)].get('puck')):
-                    line += 'o '
-                else:
-                    line += '  '
-            line += '#'
-            print(line)
-        print('# '*(self.WIDTH+2))
-
     def tilt(self, direction):
         pucks = [node for node, attributes in self.graph.nodes(data=True) if attributes.get('puck')]
         for puck in pucks:
