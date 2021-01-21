@@ -99,5 +99,5 @@ class GameRenderer:
               'it\'s '+GameRenderer.PLAYERS[game.current_player]+' turn...')
 
     def display_winner(self, winner):
-        print(GameRenderer.LEFT_PADING*' ' + winner +
+        print(GameRenderer.LEFT_PADING*' ' + GameRenderer.PLAYERS[winner] +
               " won the game! Congrats to the winner!")
