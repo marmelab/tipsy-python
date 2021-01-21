@@ -17,7 +17,7 @@ class Board:
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
     DEFAULT_PUCKS = {BLUE: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
                      RED: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
-                     BLACK: [(3, 3)]}
+                     BLACK: []}
 
     MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
 
