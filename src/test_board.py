@@ -354,6 +354,26 @@ class TestBoard(unittest.TestCase):
         # THEN
         self.assertFalse(board.graph.has_node(valid_obstacle))
 
+    def test_when_one_puck_move_toward_another_it_should_be_blocked(self):
+        # # # # #    # # # # #
+        # O   0 #    #   O 0 #
+        #       # => #       #
+        #       #    #       #
+        # # # # #    # # # # #
+        # GIVEN
+        board = Board(3,3,obstacles=[],pucks={Board.BLUE_KEY:[(0,0)],Board.RED_KEY:[(2,0)]},exits=[])
+        expected_blue_puck_position = (1,0)
+        expected_red_puck_position = (2,0)
+
+        # WHEN
+        board.tilt(Board.EAST)
+
+        # THEN
+        pucks = [node for node, attributes in board.graph.nodes(
+            data=True) if attributes.get(Board.PUCK_KEY)]
+
+        self.assertIn(expected_blue_puck_position, pucks)
+        self.assertIn(expected_red_puck_position, pucks)
 
 if __name__ == '__main__':
     unittest.main()

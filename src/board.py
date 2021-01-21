@@ -1,4 +1,3 @@
-from operator import add
 import networkx as nx
 
 
@@ -20,10 +19,7 @@ class Board:
                      RED_KEY: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
                      BLACK_KEY: [(3, 3)]}
 
-    EAST_MODIFICATOR = (1, 0)
-    NORTH_MODIFICATOR = (0, -1)
-    WEST_MODIFICATOR = (-1, 0)
-    SOUTH_MODIFICATOR = (0, 1)
+    MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
 
     PUCK_EXITS = 'puck_exits'
 
@@ -46,7 +42,10 @@ class Board:
         return fallen_pucks
 
     def __get_coordinate_by_direction(self, node, direction):
-        return tuple(map(add, node, direction))
+        (node_x, node_y) = node
+        (direction_x, direction_y) = Board.MODIFICATOR.get(direction)
+
+        return ((node_x + direction_x), (node_y + direction_y))
 
     def __initialize_pucks(self, pucks):
         for puck in pucks[Board.BLUE_KEY]:
@@ -88,7 +87,7 @@ class Board:
 
     def __get_next_free_node(self, node, direction):
         next_node = [next_node for start_node, next_node, edge_attrs in self.graph.out_edges(
-            node, data=True) if (edge_attrs.get(Board.DIRECTION_KEY) == direction)]
+            node, data=True) if (edge_attrs.get(Board.DIRECTION_KEY) == direction and not self.graph[next_node].get(Board.PUCK_KEY))]
         if next_node:
             return self.__get_next_free_node(next_node[0], direction)
         return node
