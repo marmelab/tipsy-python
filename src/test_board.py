@@ -332,12 +332,13 @@ class TestBoard(unittest.TestCase):
         puck_node = (1, 1)
         board = Board(3, 3,
                       obstacles=[], exits=[exit_node], pucks={Board.BLUE: [puck_node], Board.RED: []})
+        self.assertEqual(1, board.count_unflip_puck(Board.BLUE))
 
         # WHEN
-        fallen_pucks = board.tilt(Board.NORTH)
+        board.tilt(Board.NORTH)
 
         # THEN
-        self.assertIn(Board.BLUE, fallen_pucks)
+        self.assertEqual(0, board.count_unflip_puck(Board.BLUE))
 
     def test_when_trying_to_initialize_with_pucks_out_of_the_bounds_it_should_only_add_valid_ones(self):
         # GIVEN

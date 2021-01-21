@@ -21,7 +21,6 @@ class Board:
 
     MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
 
-
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
         self.HEIGHT = height
@@ -34,12 +33,14 @@ class Board:
     def tilt(self, direction):
         pucks = [node for node, attributes in self.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
-        fallen_pucks = []
         for puck in pucks:
-            fallen_puck = self.__move_puck_to(puck, direction)
-            if fallen_puck:
-                fallen_pucks.append(fallen_puck)
-        return fallen_pucks
+            self.__move_puck_to(puck, direction)
+
+    def count_unflip_puck(self, color):
+        return len(
+            [node for node, attributes in self.graph.nodes(data=True)
+                if attributes.get(Board.PUCK_KEY)
+                and attributes.get(Board.PUCK_KEY) == color])
 
     def __get_coordinate_by_direction(self, node, direction):
         (node_x, node_y) = node
@@ -114,8 +115,5 @@ class Board:
         next_free_node = self.__get_next_free_node(node, direction)
         # Remove puck attribute from current node
         puck_color = self.__remove_puck(node)
-        # Add puck attribute in next position
-        if self.graph.nodes[next_free_node].get(Board.EXIT_KEY):
-            return puck_color
-        else:
+        if not self.graph.nodes[next_free_node].get(Board.EXIT_KEY):
             self.__add_puck(next_free_node, puck_color)

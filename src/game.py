@@ -20,7 +20,6 @@ class Game:
         self.board = Board()
         self.we_have_a_winner = False
         self.current_player = Board.RED
-        self.pucks = {Board.RED: 6, Board.BLUE: 6, Board.BLACK: 1}
 
     def start(self):
         system('clear')
@@ -47,8 +46,7 @@ class Game:
             self.__switch_player_turn()
 
     def __play_command(self, command):
-        fallen_pucks = self.board.tilt(command)
-        self.__update_pucks(fallen_pucks)
+        self.board.tilt(command)
 
     def __switch_player_turn(self):
         if self.current_player == Board.RED:
@@ -56,15 +54,11 @@ class Game:
         else:
             self.current_player = Board.RED
 
-    def __update_pucks(self, fallen_pucks):
-        for color in fallen_pucks:
-            self.pucks[color] -= 1
-
     def __check_win(self):
-        if self.pucks.get(Board.BLACK) <= 0:
+        if self.board.count_unflip_puck(Board.BLACK) <= 0:
             self.we_have_a_winner = self.current_player
         for color in [Board.BLUE, Board.RED]:
-            if self.pucks.get(color) <= 0:
+            if self.board.count_unflip_puck(color) <= 0:
                 self.we_have_a_winner = color
 
     def __display_winner(self, winner):

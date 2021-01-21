@@ -33,13 +33,13 @@ class TestGame(unittest.TestCase):
     def test_when_black_puck_fall_of_the_board_current_player_should_win(self):
         # GIVEN
         # # # # #
-        #       #
+        # O     #
         #   *
-        #       #
+        #     0 #
         # # # # #
         game = Game()
         board = Board(3, 3, obstacles=[], pucks={
-                      Board.BLACK: [(1, 1)]}, exits=[(3, 1)])
+                      Board.BLACK: [(1, 1)],Board.BLUE:[(0,0)],Board.RED:[(2,2)]}, exits=[(3, 1)])
         game.current_player = Board.BLUE
         game.board = board
 
