@@ -380,12 +380,12 @@ class TestBoard(unittest.TestCase):
         expected_red_puck_position = (2, 0)
 
         print()
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # WHEN
         board.tilt(Board.EAST)
 
         print('After tilt')
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # THEN
         pucks = [node for node, attributes in board.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
@@ -408,12 +408,12 @@ class TestBoard(unittest.TestCase):
         expected_red_puck_position = (2, 0)
 
         print()
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # WHEN
         board.tilt(Board.EAST)
 
         print('After tilt')
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # THEN
         pucks = [node for node, attributes in board.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]

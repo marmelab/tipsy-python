@@ -25,7 +25,7 @@ class TestGame(unittest.TestCase):
             "# # # # # #   # # "
 
         # WHEN
-        board = self.remove_colors_tag(game.draw_board())
+        board = self.remove_colors_tag(game.renderer.draw_board(game))
 
         # THEN
         self.assertEqual(board, expected_board)
@@ -62,7 +62,7 @@ class TestGame(unittest.TestCase):
                       Board.BLUE: [(1, 1)], Board.RED: [(2, 0)], Board.BLACK: [(0, 0)]}, exits=[(3, 1)])
         game.board = board
         print()
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
 
         # WHEN
         game._Game__play_command(Board.EAST)
@@ -84,7 +84,7 @@ class TestGame(unittest.TestCase):
                       Board.RED: [(1, 1)], Board.BLUE: [(2, 0)], Board.BLACK: [(0, 0)]}, exits=[(3, 1)])
         game.board = board
         print()
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
 
         # WHEN
         game._Game__play_command(Board.EAST)
