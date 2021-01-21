@@ -5,7 +5,7 @@ from os import system
 class Game:
     OBSTACLE = '# '
     EXIT = '  '
-    PUCK = {'red':'O ','blue':'0 '}
+    PUCK = {Board.RED_KEY:'O ',Board.BLUE_KEY:'0 '}
 
     def __init__(self):
         self.pucks = 1
@@ -45,31 +45,31 @@ class Game:
     def draw_board(self):
         board = Game.OBSTACLE
         for i in range(self.board.WIDTH):
-            if self.board.graph.has_node((i, -1)) and self.board.graph.nodes[(i, -1)].get('exit'):
+            if self.board.graph.has_node((i, -1)) and self.board.graph.nodes[(i, -1)].get(Board.EXIT_KEY):
                 board += Game.EXIT
             else:
                 board += Game.OBSTACLE
         board += '# \n'
         for j in range(self.board.HEIGHT):
-            if self.board.graph.has_node((-1, j)) and self.board.graph.nodes[(-1, j)].get('exit'):
+            if self.board.graph.has_node((-1, j)) and self.board.graph.nodes[(-1, j)].get(Board.EXIT_KEY):
                 board += Game.EXIT
             else:
                 board += Game.OBSTACLE
             for i in range(self.board.WIDTH):
                 if (not self.board.graph.has_node((i, j))):
                     board += Game.OBSTACLE
-                elif (self.board.graph.nodes[(i, j)].get('puck')):
-                    board += Game.PUCK[self.board.graph.nodes[(i, j)].get('puck')]
+                elif (self.board.graph.nodes[(i, j)].get(Board.PUCK_KEY)):
+                    board += Game.PUCK[self.board.graph.nodes[(i, j)].get(Board.PUCK_KEY)]
                 else:
                     board += '  '
-            if self.board.graph.has_node((self.board.WIDTH, j)) and self.board.graph.nodes[(self.board.WIDTH, j)].get('exit'):
+            if self.board.graph.has_node((self.board.WIDTH, j)) and self.board.graph.nodes[(self.board.WIDTH, j)].get(Board.EXIT_KEY):
                 board += Game.EXIT
             else:
                 board += Game.OBSTACLE
             board += '\n'
         board += Game.OBSTACLE
         for i in range(self.board.WIDTH):
-            if self.board.graph.has_node((i, self.board.HEIGHT)) and self.board.graph.nodes[(i, self.board.HEIGHT)].get('exit'):
+            if self.board.graph.has_node((i, self.board.HEIGHT)) and self.board.graph.nodes[(i, self.board.HEIGHT)].get(Board.EXIT_KEY):
                 board += Game.EXIT
             else:
                 board += Game.OBSTACLE
