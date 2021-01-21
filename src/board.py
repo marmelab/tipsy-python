@@ -96,7 +96,8 @@ class Board:
         return node
 
     def __remove_puck(self, node):
-        if self.graph.has_node(node):
+        print("remove ", node)
+        if self.graph.has_node(node) and self.graph.nodes[node].get(Board.PUCK_KEY):
             puck_color = self.graph.nodes[node].get(Board.PUCK_KEY)
             del self.graph.nodes[node][Board.PUCK_KEY]
             return puck_color
@@ -106,6 +107,11 @@ class Board:
             self.graph.nodes[node][Board.PUCK_KEY] = color
 
     def __move_puck_to(self, node, direction):
+        neighbor = self.__get_coordinate_by_direction(node, direction)
+        is_neighbor_a_puck = self.graph.has_node(neighbor) \
+            and self.graph.nodes[neighbor].get(Board.PUCK_KEY)
+        if is_neighbor_a_puck:
+            self.__move_puck_to(neighbor, direction)
         # Get next position of puck
         next_free_node = self.__get_next_free_node(node, direction)
         # Remove puck attribute from current node

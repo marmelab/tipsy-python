@@ -392,6 +392,34 @@ class TestBoard(unittest.TestCase):
         self.assertIn(expected_blue_puck_position, pucks)
         self.assertIn(expected_red_puck_position, pucks)
 
+    def test_when_one_puck_move_toward_another_with_free_nodes_they_should_both_move(self):
+        game = Game()
+        # # # # #    # # # # #
+        # O 0   #    #   O 0 #
+        #       # => #       #
+        #       #    #       #
+        # # # # #    # # # # #
+        # GIVEN
+        board = Board(3, 3, obstacles=[], pucks={Board.BLUE: [
+                      (0, 0)], Board.RED: [(1, 0)]}, exits=[])
+        game.board = board
+        expected_blue_puck_position = (1, 0)
+        expected_red_puck_position = (2, 0)
+
+        print()
+        print(game.draw_board())
+        # WHEN
+        board.tilt(Board.EAST)
+
+        print('After tilt')
+        print(game.draw_board())
+        # THEN
+        pucks = [node for node, attributes in board.graph.nodes(
+            data=True) if attributes.get(Board.PUCK_KEY)]
+
+        self.assertIn(expected_blue_puck_position, pucks)
+        self.assertIn(expected_red_puck_position, pucks)
+
 
 if __name__ == '__main__':
     unittest.main()
