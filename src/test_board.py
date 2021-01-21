@@ -337,7 +337,7 @@ class TestBoard(unittest.TestCase):
         fallen_pucks = board.tilt(Board.NORTH)
 
         # THEN
-        self.assertEqual(fallen_pucks, 1)
+        self.assertIn(Board.BLUE, fallen_pucks)
 
     def test_when_trying_to_initialize_with_pucks_out_of_the_bounds_it_should_only_add_valid_ones(self):
         # GIVEN

@@ -14,7 +14,6 @@ class Board:
 
     DEFAULT_OBSTACLES = [(0, 3), (1, 1), (1, 5), (2, 2),
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
-    PUCK_EXITS = 'puck_exit'
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
     DEFAULT_PUCKS = {BLUE: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
                      RED: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
@@ -22,7 +21,6 @@ class Board:
 
     MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
 
-    PUCK_EXITS = 'puck_exits'
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
@@ -36,10 +34,11 @@ class Board:
     def tilt(self, direction):
         pucks = [node for node, attributes in self.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
-        fallen_pucks = 0
+        fallen_pucks = []
         for puck in pucks:
-            if self.__move_puck_to(puck, direction):
-                fallen_pucks += 1
+            fallen_puck = self.__move_puck_to(puck, direction)
+            if fallen_puck:
+                fallen_pucks.append(fallen_puck)
         return fallen_pucks
 
     def __get_coordinate_by_direction(self, node, direction):
@@ -118,6 +117,6 @@ class Board:
         puck_color = self.__remove_puck(node)
         # Add puck attribute in next position
         if self.graph.nodes[next_free_node].get(Board.EXIT_KEY):
-            return Board.PUCK_EXITS
+            return puck_color
         else:
             self.__add_puck(next_free_node, puck_color)
