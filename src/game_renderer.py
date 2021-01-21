@@ -14,6 +14,10 @@ class GameRenderer:
     PUCK = {Board.RED: WHITE_BG + '\033[31mO ' + END_COLOR,
             Board.BLUE: WHITE_BG + '\033[34m0 ' + END_COLOR,
             Board.BLACK: WHITE_BG + '\033[90m0 ' + END_COLOR}
+    PLAYERS = {
+        Board.RED : '\033[31m RED ' + END_COLOR,
+        Board.BLUE : '\033[34m BLUE ' + END_COLOR,
+    }
 
     def draw_board(self, game):
         board = GameRenderer.OBSTACLE
@@ -92,7 +96,7 @@ class GameRenderer:
     def display_game_infos(self, game):
         print(' ' * GameRenderer.LEFT_PADING + '')
         print(' ' * GameRenderer.LEFT_PADING +
-              'it\'s '+game.current_player+' turn...')
+              'it\'s '+GameRenderer.PLAYERS[game.current_player]+' turn...')
 
     def display_winner(self, winner):
         print(GameRenderer.LEFT_PADING*' ' + winner +

@@ -22,8 +22,9 @@ class Game:
             if self.we_have_a_winner:
                 self.renderer.display_winner(self.we_have_a_winner)
                 break
-            self.renderer.display_game_infos(self)
             self.renderer.display_instructions()
+
+            self.renderer.display_game_infos(self)
             input_command = ''
             while (input_command.lower() not in [Board.EAST, Board.WEST, Board.NORTH, Board.SOUTH]):
                 input_command = input(self.renderer.input_message())
