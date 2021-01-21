@@ -17,7 +17,7 @@ class Board:
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
     DEFAULT_PUCKS = {BLUE: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
                      RED: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
-                     BLACK: []}
+                     BLACK: [(3, 3)]}
 
     MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
 
@@ -95,7 +95,6 @@ class Board:
         return node
 
     def __remove_puck(self, node):
-        print("remove ", node)
         if self.graph.has_node(node) and self.graph.nodes[node].get(Board.PUCK_KEY):
             puck_color = self.graph.nodes[node].get(Board.PUCK_KEY)
             del self.graph.nodes[node][Board.PUCK_KEY]
