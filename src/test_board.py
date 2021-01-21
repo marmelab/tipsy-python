@@ -14,7 +14,7 @@ class TestBoard(unittest.TestCase):
 
     def test_node_with_puck_on_it_should_have_puck_attribute(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         known_node_with_puck = (board.WIDTH//2, board.HEIGHT//2)
 
         # THEN
@@ -24,7 +24,7 @@ class TestBoard(unittest.TestCase):
 
     def test_node_without_puck_on_it_should_not_have_puck_attribute(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         known_node_with_puck = (board.WIDTH//2, board.HEIGHT//2)
 
         # THEN
@@ -86,7 +86,7 @@ class TestBoard(unittest.TestCase):
 
     def test_empty_board_middle_node_should_have_upper_lower_right_and_left_neighbours(self):
         # GIVEN
-        board = Board(3, 3, obstacles=[], exits=[], pucks={'blue':[],'red':[]})
+        board = Board(3, 3, obstacles=[], exits=[], pucks={Board.BLUE_KEY:[],Board.RED_KEY:[]})
 
         # THEN
         middle_node = (1, 1)
@@ -96,13 +96,13 @@ class TestBoard(unittest.TestCase):
         north_node = (1, 0)
 
         self.assertEqual(board.graph[middle_node]
-                         [east_node]["direction"], Board.EAST)
+                         [east_node][Board.DIRECTION_KEY], Board.EAST)
         self.assertEqual(board.graph[middle_node]
-                         [south_node]["direction"], Board.SOUTH)
+                         [south_node][Board.DIRECTION_KEY], Board.SOUTH)
         self.assertEqual(board.graph[middle_node]
-                         [west_node]["direction"], Board.WEST)
+                         [west_node][Board.DIRECTION_KEY], Board.WEST)
         self.assertEqual(board.graph[middle_node]
-                         [north_node]["direction"], Board.NORTH)
+                         [north_node][Board.DIRECTION_KEY], Board.NORTH)
 
     def test_get_next_right_free_node(self):
         # GIVEN
@@ -158,7 +158,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_up(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         initial_puck_position = (3, 3)
         expected_puck_position = (3, 0)
 
@@ -173,7 +173,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_left(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (0, board.HEIGHT//2)
 
@@ -188,7 +188,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_right(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (board.WIDTH-1, board.HEIGHT//2)
 
@@ -203,7 +203,7 @@ class TestBoard(unittest.TestCase):
 
     def test_move_puck_to_down(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (board.WIDTH//2, board.HEIGHT-1)
 
@@ -216,9 +216,9 @@ class TestBoard(unittest.TestCase):
         self.assertIn(expected_puck_position, pucks)
         self.assertNotIn(initial_puck_position, pucks)
 
-    def test_tilt_board_twice_in_the_same_direction(self):
+    def test_puck_should_end_at_the_same_position_when_tilt_board_twice_in_the_same_direction(self):
         # GIVEN
-        board = Board(obstacles=[], exits=[])
+        board = Board(obstacles=[], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[()]})
         initial_puck_position = (board.WIDTH//2, board.HEIGHT//2)
         expected_puck_position = (board.WIDTH//2, board.HEIGHT-1)
 
@@ -234,7 +234,7 @@ class TestBoard(unittest.TestCase):
 
     def test_puck_should_be_stopped_by_obstacle_when_moved_toward_it(self):
         # GIVEN
-        board = Board(width=7, height=7, obstacles=[(6, 3)], exits=[], pucks={'blue':[(3, 3)],'red':[]})
+        board = Board(width=7, height=7, obstacles=[(6, 3)], exits=[], pucks={Board.BLUE_KEY:[(3, 3)],Board.RED_KEY:[]})
         initial_puck_position = (3, 3)
         expected_puck_position = (5, 3)
 
@@ -267,7 +267,7 @@ class TestBoard(unittest.TestCase):
 
         self.assertIn(exit_node, exits)
         self.assertEqual(board.graph[right_node]
-                         [exit_node]["direction"], Board.WEST)
+                         [exit_node][Board.DIRECTION_KEY], Board.WEST)
 
     def test_right_exit_should_have_attribute_exit_and_east_edge_with_left_node(self):
         # GIVEN
@@ -283,7 +283,7 @@ class TestBoard(unittest.TestCase):
 
         self.assertIn(exit_node, exits)
         self.assertEqual(board.graph[left_node]
-                         [exit_node]["direction"], Board.EAST)
+                         [exit_node][Board.DIRECTION_KEY], Board.EAST)
 
     def test_lower_exit_should_have_attribute_exit_and_south_edge_with_upper_node(self):
         # GIVEN
@@ -299,7 +299,7 @@ class TestBoard(unittest.TestCase):
 
         self.assertIn(exit_node, exits)
         self.assertEqual(board.graph[upper_node]
-                         [exit_node]["direction"], Board.SOUTH)
+                         [exit_node][Board.DIRECTION_KEY], Board.SOUTH)
 
     def test_upper_exit_should_have_attribute_exit_and_north_edge_with_lower_node(self):
         # GIVEN
@@ -314,14 +314,14 @@ class TestBoard(unittest.TestCase):
 
         self.assertIn(exit_node, exits)
         self.assertEqual(board.graph[lower_node]
-                         [exit_node]["direction"], Board.NORTH)
+                         [exit_node][Board.DIRECTION_KEY], Board.NORTH)
 
     def test_tilt_board_with_puck_next_to_exit_should_push_the_puck_out(self):
         # GIVEN
         exit_node = (1, -1)
         puck_node = (1, 1)
         board = Board(3, 3,
-                      obstacles=[], exits=[exit_node], pucks={'blue':[puck_node],'red':[]})
+                      obstacles=[], exits=[exit_node], pucks={Board.BLUE_KEY:[puck_node],Board.RED_KEY:[]})
 
         # WHEN
         fallen_pucks = board.tilt(Board.NORTH)
@@ -336,7 +336,7 @@ class TestBoard(unittest.TestCase):
 
         # WHEN
         board = Board(3, 3,
-                      obstacles=[], exits=[], pucks={'blue':invalid_pucks + [valid_puck],'red':[]})
+                      obstacles=[], exits=[], pucks={Board.BLUE_KEY:invalid_pucks + [valid_puck],Board.RED_KEY:[]})
 
         # THEN
         pucks = [node for node, attributes in board.graph.nodes(

@@ -8,6 +8,7 @@ class Board:
     DIRECTION_KEY = 'direction'
     BLUE_KEY = 'blue'
     RED_KEY = 'red'
+    BLACK_KEY = 'black'
 
     [WEST, NORTH, EAST, SOUTH] = ["w", "n", "e", "s"]
 
@@ -16,7 +17,8 @@ class Board:
     PUCK_EXITS = 'puck_exit'
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
     DEFAULT_PUCKS = {BLUE_KEY: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
-                     RED_KEY: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)]}
+                     RED_KEY: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
+                     BLACK_KEY: [(3, 3)]}
 
     EAST_MODIFICATOR = (1, 0)
     NORTH_MODIFICATOR = (0, -1)
@@ -24,7 +26,6 @@ class Board:
     SOUTH_MODIFICATOR = (0, 1)
 
     PUCK_EXITS = 'puck_exits'
-
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
@@ -35,13 +36,13 @@ class Board:
         self.__initialize_exits(exits)
         self.__initialize_obstacles(obstacles)
 
-
     def tilt(self, direction):
         pucks = [node for node, attributes in self.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
         fallen_pucks = 0
         for puck in pucks:
-            fallen_pucks += self.__move_puck_to(puck, direction)
+            if self.__move_puck_to(puck, direction):
+                fallen_pucks += 1
         return fallen_pucks
 
     def __get_coordinate_by_direction(self, node, direction):
