@@ -5,9 +5,10 @@ class Board:
     PUCK_KEY = 'puck'
     EXIT_KEY = 'exit'
     DIRECTION_KEY = 'direction'
-    BLUE_KEY = 'blue'
-    RED_KEY = 'red'
-    BLACK_KEY = 'black'
+
+    BLUE = 'blue'
+    RED = 'red'
+    BLACK = 'black'
 
     [WEST, NORTH, EAST, SOUTH] = ["w", "n", "e", "s"]
 
@@ -15,9 +16,9 @@ class Board:
                          (2, 4), (3, 0), (3, 6), (4, 2), (4, 4), (5, 1), (5, 5), (6, 3)]
     PUCK_EXITS = 'puck_exit'
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
-    DEFAULT_PUCKS = {BLUE_KEY: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
-                     RED_KEY: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
-                     BLACK_KEY: [(3, 3)]}
+    DEFAULT_PUCKS = {BLUE: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
+                     RED: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
+                     BLACK: [(3, 3)]}
 
     MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
 
@@ -48,10 +49,12 @@ class Board:
         return ((node_x + direction_x), (node_y + direction_y))
 
     def __initialize_pucks(self, pucks):
-        for puck in pucks[Board.BLUE_KEY]:
-            self.__add_puck(puck, Board.BLUE_KEY)
-        for puck in pucks[Board.RED_KEY]:
-            self.__add_puck(puck, Board.RED_KEY)
+        for puck in (pucks.get(Board.BLUE) if pucks.get(Board.BLUE) else []):
+            self.__add_puck(puck, Board.BLUE)
+        for puck in (pucks.get(Board.RED) if pucks.get(Board.RED) else []):
+            self.__add_puck(puck, Board.RED)
+        for puck in (pucks.get(Board.BLACK) if pucks.get(Board.BLACK) else []):
+            self.__add_puck(puck, Board.BLACK)
 
     def __initialize_obstacles(self, obstacles):
         self.graph.remove_nodes_from(obstacles)
@@ -87,7 +90,7 @@ class Board:
 
     def __get_next_free_node(self, node, direction):
         next_node = [next_node for start_node, next_node, edge_attrs in self.graph.out_edges(
-            node, data=True) if (edge_attrs.get(Board.DIRECTION_KEY) == direction and not self.graph[next_node].get(Board.PUCK_KEY))]
+            node, data=True) if (edge_attrs.get(Board.DIRECTION_KEY) == direction and not self.graph.nodes[next_node].get(Board.PUCK_KEY))]
         if next_node:
             return self.__get_next_free_node(next_node[0], direction)
         return node

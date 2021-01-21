@@ -12,7 +12,7 @@ class TestGame(unittest.TestCase):
 "#       #       # \n" + \
 "#   # O   O #     \n" + \
 "#   0 # 0 # 0   # \n" + \
-"# #   O   O   # # \n" + \
+"# #   O * O   # # \n" + \
 "#   0 # 0 # 0   # \n" + \
 "    # O   O #   # \n" + \
 "#       #       # \n" + \

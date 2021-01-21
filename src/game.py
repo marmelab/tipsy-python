@@ -5,7 +5,7 @@ from os import system
 class Game:
     OBSTACLE = '# '
     EXIT = '  '
-    PUCK = {Board.RED_KEY:'O ',Board.BLUE_KEY:'0 '}
+    PUCK = {Board.RED:'O ',Board.BLUE:'0 ', Board.BLACK:'* '}
 
     def __init__(self):
         self.pucks = 1
