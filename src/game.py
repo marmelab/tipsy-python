@@ -4,8 +4,11 @@ from os import system
 
 class Game:
     OBSTACLE = '# '
+    EXIT = '  '
     PUCK = 'o '
+
     def __init__(self):
+        self.pucks = 1
         self.board = Board()
 
     def start(self):
@@ -14,18 +17,44 @@ class Game:
         while True:
             system('clear')
             print(self.draw_board())
+            if self.__check_win():
+                self.__display_winner()
+                break
             self.display_instructions()
             input_command = ''
             while (input_command.lower() not in [Board.EAST, Board.WEST, Board.NORTH, Board.SOUTH]):
                 input_command = input('Use ' + Board.NORTH + ', ' + Board.SOUTH +
                                       ', ' + Board.EAST + ', ' + Board.WEST + ' to tilt the board: ')
 
-            self.board.tilt(input_command)
+            fallen_pucks = self.board.tilt(input_command)
+            self.pucks -= fallen_pucks
+
+
+    def __check_win(self):
+        return self.pucks <= 0
+
+    def __display_winner(self):
+        print("oooooo   oooo                                            o8o              .o.")
+        print(" `888.   .8'                                             `\"'              888")
+        print("  `888. .8'    .ooooo.  oooo  oooo     oooo oooo    ooo oooo  ooo. .oo.   888")
+        print("   `888.8'    d88' `88b `888  `888      `88. `88.  .8'  `888  `888P\"Y88b  Y8P")
+        print("    `888'     888   888  888   888       `88..]88..8'    888   888   888  `8'")
+        print("     888      888   888  888   888        `888'`888'     888   888   888  .o.")
+        print("    o888o     `Y8bod8P'  `V88V\"V8P'        `8'  `8'     o888o o888o o888o Y8P")
 
     def draw_board(self):
-        board = Game.OBSTACLE*(self.board.WIDTH+2)+'\n'
+        board = Game.OBSTACLE
+        for i in range(self.board.WIDTH):
+            if self.board.graph.has_node((i, -1)) and self.board.graph.nodes[(i, -1)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
+        board += '# \n'
         for j in range(self.board.HEIGHT):
-            board += Game.OBSTACLE
+            if self.board.graph.has_node((-1, j)) and self.board.graph.nodes[(-1, j)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
             for i in range(self.board.WIDTH):
                 if (not self.board.graph.has_node((i, j))):
                     board += Game.OBSTACLE
@@ -33,8 +62,18 @@ class Game:
                     board += Game.PUCK
                 else:
                     board += '  '
-            board += Game.OBSTACLE + '\n'
-        board += Game.OBSTACLE*(self.board.WIDTH+2)
+            if self.board.graph.has_node((self.board.WIDTH, j)) and self.board.graph.nodes[(self.board.WIDTH, j)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
+            board += '\n'
+        board += Game.OBSTACLE
+        for i in range(self.board.WIDTH):
+            if self.board.graph.has_node((i, self.board.HEIGHT)) and self.board.graph.nodes[(i, self.board.HEIGHT)].get('exit'):
+                board += Game.EXIT
+            else:
+                board += Game.OBSTACLE
+        board += '# '
         return board
 
     def display_title(self):
