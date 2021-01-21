@@ -61,7 +61,6 @@ class TestGame(unittest.TestCase):
         board = Board(3, 3, obstacles=[], pucks={
                       Board.BLUE: [(1, 1)], Board.RED: [(2, 0)], Board.BLACK: [(0, 0)]}, exits=[(3, 1)])
         game.board = board
-        game.pucks = {Board.RED: 1, Board.BLUE: 1, Board.BLACK: 1}
         print()
         print(game.draw_board())
 
@@ -71,6 +70,28 @@ class TestGame(unittest.TestCase):
 
         # THEN
         self.assertEqual(game.we_have_a_winner, Board.BLUE)
+
+
+    def test_when_all_red_pucks_fall_of_the_board_blue_player_should_win(self):
+        # GIVEN
+        # # # # #   0 : blue
+        # *     #   O : red
+        # 0 O       * : black
+        #       #
+        # # # # #
+        game = Game()
+        board = Board(3, 3, obstacles=[], pucks={
+                      Board.RED: [(1, 1)], Board.BLUE: [(2, 0)], Board.BLACK: [(0, 0)]}, exits=[(3, 1)])
+        game.board = board
+        print()
+        print(game.draw_board())
+
+        # WHEN
+        game._Game__play_command(Board.EAST)
+        game._Game__check_win()
+
+        # THEN
+        self.assertEqual(game.we_have_a_winner, Board.RED)
 
 
 if __name__ == '__main__':
