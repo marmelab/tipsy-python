@@ -72,7 +72,7 @@ class TestGame(unittest.TestCase):
         self.assertEqual(game.we_have_a_winner, Board.BLUE)
 
 
-    def test_when_all_red_pucks_fall_of_the_board_blue_player_should_win(self):
+    def test_when_all_blue_pucks_fall_of_the_board_blue_player_should_win(self):
         # GIVEN
         # # # # #   0 : blue
         # *     #   O : red
@@ -134,6 +134,8 @@ class TestGame(unittest.TestCase):
         game._Game__play_command(Board.SOUTH)
         print()
         print(game.renderer.draw_board(game))
+
+        # THEN
         self.assertTrue(game.board.graph.has_node((3,5)))
         self.assertEqual(game.board.graph.nodes[(3,5)][Board.PUCK_KEY], Board.BLUE)
         self.assertTrue(game.board.graph.has_node((3,4)))
@@ -141,6 +143,45 @@ class TestGame(unittest.TestCase):
         self.assertTrue(game.board.graph.has_node((3,3)))
         self.assertEqual(game.board.graph.nodes[(3,3)][Board.PUCK_KEY], Board.BLUE)
 
+    def test_when_no_remaining_turns_it_should_switch_player(self):
+        # GIVEN
+        game = Game()
+        game.current_player = Board.BLUE
+        game.remaining_turns = 0
+        board = Board()
+        game.board = board
+        # WHEN
+        game._Game__switch_player_turn()
+
+        # THEN
+        self.assertEqual(game.current_player, Board.RED)
+
+    def test_when_remaining_turns_it_should_not_switch_player(self):
+        # GIVEN
+        game = Game()
+        game.current_player = Board.BLUE
+        game.remaining_turns = 1
+        board = Board()
+        game.board = board
+        # WHEN
+        game._Game__switch_player_turn()
+
+        # THEN
+        self.assertEqual(game.current_player, Board.BLUE)
+
+    def test_it_should_decrement_remaining_turn_when_playing_command(self):
+        # GIVEN
+        game = Game()
+        game.current_player = Board.BLUE
+        game.remaining_turns = 2
+        board = Board()
+        game.board = board
+
+        # WHEN
+        game._Game__play_command(Board.NORTH)
+
+        # THEN
+        self.assertEqual(game.remaining_turns, 1)
 
 if __name__ == '__main__':
     unittest.main()

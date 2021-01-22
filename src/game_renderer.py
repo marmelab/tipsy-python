@@ -101,7 +101,7 @@ class GameRenderer:
     def display_game_infos(self, game):
         print(' ' * GameRenderer.LEFT_PADING + '')
         print(' ' * GameRenderer.LEFT_PADING +
-              'it\'s '+GameRenderer.PLAYERS[game.current_player]+' turn...')
+              'it\'s '+GameRenderer.PLAYERS[game.current_player]+' turn...' + str(game.remaining_turns) + ' turns left')
 
     def display_winner(self, winner):
         COLOR_TAG = GameRenderer.RED if winner == Board.RED else GameRenderer.BLUE
