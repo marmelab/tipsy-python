@@ -17,9 +17,9 @@ class TestGame(unittest.TestCase):
             "# #   # # # # # # \n" + \
             "#       #       # \n" + \
             "#   # O   O #     \n" + \
-            "#   0 # 0 # 0   # \n" + \
+            "#   O # O # O   # \n" + \
             "# #   O 0 O   # # \n" + \
-            "#   0 # 0 # 0   # \n" + \
+            "#   O # O # O   # \n" + \
             "    # O   O #   # \n" + \
             "#       #       # \n" + \
             "# # # # # #   # # "
@@ -89,9 +89,57 @@ class TestGame(unittest.TestCase):
         # WHEN
         game._Game__play_command(Board.EAST)
         game._Game__check_win()
+        print()
+        print(game.renderer.draw_board(game))
 
         # THEN
         self.assertEqual(game.we_have_a_winner, Board.RED)
+
+
+    def test_when_puck_fall_of_the_board_it_should_be_put_back_flipped(self):
+        # # # # #    # # # # #
+        # O          #   X   #
+        #       # => #       #
+        #       #    #       #
+        # # # # #    # # # # #
+        # GIVEN
+        game = Game()
+        board = Board(3, 3, obstacles=[], pucks={Board.BLUE: [(0, 0)]}, exits=[(3,0)])
+        game.board = board
+        print()
+        print(game.renderer.draw_board(game))
+
+        # WHEN
+        game._Game__play_command(Board.EAST)
+        print()
+        print(game.renderer.draw_board(game))
+        puck = [node for node, attributes in board.graph.nodes(
+            data=True) if attributes.get(Board.PUCK_KEY)][0]
+
+        self.assertTrue(game.board.graph.nodes[puck].get('flipped'))
+        self.assertEqual(game.board.graph.nodes[puck].get(Board.PUCK_KEY), Board.BLUE)
+
+    def test_when_flipping_north_and_south(self):
+        # GIVEN
+        game = Game()
+        board = Board()
+        game.board = board
+        print()
+        print(game.renderer.draw_board(game))
+
+        # WHEN
+        game._Game__play_command(Board.NORTH)
+        print()
+        print(game.renderer.draw_board(game))
+        game._Game__play_command(Board.SOUTH)
+        print()
+        print(game.renderer.draw_board(game))
+        self.assertTrue(game.board.graph.has_node((3,5)))
+        self.assertEqual(game.board.graph.nodes[(3,5)][Board.PUCK_KEY], Board.BLUE)
+        self.assertTrue(game.board.graph.has_node((3,4)))
+        self.assertEqual(game.board.graph.nodes[(3,4)][Board.PUCK_KEY], Board.BLACK)
+        self.assertTrue(game.board.graph.has_node((3,3)))
+        self.assertEqual(game.board.graph.nodes[(3,3)][Board.PUCK_KEY], Board.BLUE)
 
 
 if __name__ == '__main__':
