@@ -1,99 +1,50 @@
 from board import Board
+from game_renderer import GameRenderer
 from os import system
+from os import get_terminal_size
 
 
 class Game:
-    OBSTACLE = '# '
-    EXIT = '  '
-    PUCK = {Board.RED: 'O ', Board.BLUE: '0 ', Board.BLACK: '* '}
+
 
     def __init__(self):
         self.board = Board()
-        self.pucks = {Board.RED: 6, Board.BLUE: 6}
+        self.we_have_a_winner = False
+        self.current_player = Board.RED
+        self.renderer = GameRenderer()
 
     def start(self):
         system('clear')
-        self.display_title()
+        self.renderer.display_title()
         while True:
             system('clear')
-            print(self.draw_board())
-            we_have_a_winner = self.__check_win()
-            if we_have_a_winner:
-                self.__display_winner(we_have_a_winner)
+            self.renderer.display_board(self);
+            if self.we_have_a_winner:
+                self.renderer.display_winner(self.we_have_a_winner)
                 break
-            self.display_instructions()
+            self.renderer.display_instructions()
+
+            self.renderer.display_game_infos(self)
             input_command = ''
             while (input_command.lower() not in [Board.EAST, Board.WEST, Board.NORTH, Board.SOUTH]):
-                input_command = input('Use ' + Board.NORTH + ', ' + Board.SOUTH +
-                                      ', ' + Board.EAST + ', ' + Board.WEST + ' to tilt the board: ')
+                input_command = input(self.renderer.input_message())
 
-            fallen_pucks = self.board.tilt(input_command)
-            self.__update_pucks(fallen_pucks)
+            self.__play_command(input_command)
+            self.__check_win()
+            self.__switch_player_turn()
 
-    def __update_pucks(self, fallen_pucks):
-        for color in fallen_pucks:
-            self.pucks[color] -= 1
+    def __play_command(self, command):
+        self.board.tilt(command)
+
+    def __switch_player_turn(self):
+        if self.current_player == Board.RED:
+            self.current_player = Board.BLUE
+        else:
+            self.current_player = Board.RED
 
     def __check_win(self):
-        for color in self.pucks:
-            if self.pucks.get(color) <= 0:
-                return color
-
-    def __display_winner(self, winner):
-        print(winner+" won the game! Congrats to the winner!")
-
-    def draw_board(self):
-        board = Game.OBSTACLE
-        for i in range(self.board.WIDTH):
-            if self.board.graph.has_node((i, -1)) and self.board.graph.nodes[(i, -1)].get(Board.EXIT_KEY):
-                board += Game.EXIT
-            else:
-                board += Game.OBSTACLE
-        board += '# \n'
-        for j in range(self.board.HEIGHT):
-            if self.board.graph.has_node((-1, j)) and self.board.graph.nodes[(-1, j)].get(Board.EXIT_KEY):
-                board += Game.EXIT
-            else:
-                board += Game.OBSTACLE
-            for i in range(self.board.WIDTH):
-                if (not self.board.graph.has_node((i, j))):
-                    board += Game.OBSTACLE
-                elif (self.board.graph.nodes[(i, j)].get(Board.PUCK_KEY)):
-                    board += Game.PUCK[self.board.graph.nodes[(
-                        i, j)].get(Board.PUCK_KEY)]
-                else:
-                    board += '  '
-            if self.board.graph.has_node((self.board.WIDTH, j)) and self.board.graph.nodes[(self.board.WIDTH, j)].get(Board.EXIT_KEY):
-                board += Game.EXIT
-            else:
-                board += Game.OBSTACLE
-            board += '\n'
-        board += Game.OBSTACLE
-        for i in range(self.board.WIDTH):
-            if self.board.graph.has_node((i, self.board.HEIGHT)) and self.board.graph.nodes[(i, self.board.HEIGHT)].get(Board.EXIT_KEY):
-                board += Game.EXIT
-            else:
-                board += Game.OBSTACLE
-        board += '# '
-        return board
-
-    def display_title(self):
-        print("    .    o8o")
-        print("  .o8    `\"'")
-        print(".o888oo oooo  oo.ooooo.   .oooo.o oooo    ooo")
-        print("  888   `888   888' `88b d88(  \"8  `88.  .8'")
-        print("  888    888   888   888 `\"Y88b.    `88..8'")
-        print("  888 .  888   888   888 o.  )88b    `888'")
-        print("  \"888\" o888o  888bod8P' 8\"\"888P'     .8'")
-        print("               888                .o..P'")
-        print("              o888o               `Y8P'")
-        print("")
-        print("")
-        input("Welcome to Tipsy game. Type Enter to start")
-
-    def display_instructions(self):
-        print("     ^")
-        print("     n")
-        print(" < w * e >")
-        print("     s")
-        print("     v")
+        if self.board.count_unflip_puck(Board.BLACK) <= 0:
+            self.we_have_a_winner = self.current_player
+        for color in [Board.BLUE, Board.RED]:
+            if self.board.count_unflip_puck(color) <= 0:
+                self.we_have_a_winner = color

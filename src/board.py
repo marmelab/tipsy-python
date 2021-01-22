@@ -17,10 +17,9 @@ class Board:
     DEFAULT_EXITS = [(1, -1), (7, 1), (-1, 5), (5, 7)]
     DEFAULT_PUCKS = {BLUE: [(1, 2), (3, 2), (5, 2), (1, 4), (3, 4), (5, 4)],
                      RED: [(2, 1), (2, 3), (2, 5), (4, 1), (4, 3), (4, 5)],
-                     BLACK: []}
+                     BLACK: [(3, 3)]}
 
     MODIFICATOR = {EAST: (1, 0), NORTH: (0, -1), WEST: (-1, 0), SOUTH: (0, 1)}
-
 
     def __init__(self, width=7, height=7, obstacles=DEFAULT_OBSTACLES, exits=DEFAULT_EXITS, pucks=DEFAULT_PUCKS):
         self.WIDTH = width
@@ -34,12 +33,14 @@ class Board:
     def tilt(self, direction):
         pucks = [node for node, attributes in self.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
-        fallen_pucks = []
         for puck in pucks:
-            fallen_puck = self.__move_puck_to(puck, direction)
-            if fallen_puck:
-                fallen_pucks.append(fallen_puck)
-        return fallen_pucks
+            self.__move_puck_to(puck, direction)
+
+    def count_unflip_puck(self, color):
+        return len(
+            [node for node, attributes in self.graph.nodes(data=True)
+                if attributes.get(Board.PUCK_KEY)
+                and attributes.get(Board.PUCK_KEY) == color])
 
     def __get_coordinate_by_direction(self, node, direction):
         (node_x, node_y) = node
@@ -95,7 +96,6 @@ class Board:
         return node
 
     def __remove_puck(self, node):
-        print("remove ", node)
         if self.graph.has_node(node) and self.graph.nodes[node].get(Board.PUCK_KEY):
             puck_color = self.graph.nodes[node].get(Board.PUCK_KEY)
             del self.graph.nodes[node][Board.PUCK_KEY]
@@ -115,8 +115,5 @@ class Board:
         next_free_node = self.__get_next_free_node(node, direction)
         # Remove puck attribute from current node
         puck_color = self.__remove_puck(node)
-        # Add puck attribute in next position
-        if self.graph.nodes[next_free_node].get(Board.EXIT_KEY):
-            return puck_color
-        else:
+        if not self.graph.nodes[next_free_node].get(Board.EXIT_KEY):
             self.__add_puck(next_free_node, puck_color)

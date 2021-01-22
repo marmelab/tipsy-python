@@ -332,12 +332,13 @@ class TestBoard(unittest.TestCase):
         puck_node = (1, 1)
         board = Board(3, 3,
                       obstacles=[], exits=[exit_node], pucks={Board.BLUE: [puck_node], Board.RED: []})
+        self.assertEqual(1, board.count_unflip_puck(Board.BLUE))
 
         # WHEN
-        fallen_pucks = board.tilt(Board.NORTH)
+        board.tilt(Board.NORTH)
 
         # THEN
-        self.assertIn(Board.BLUE, fallen_pucks)
+        self.assertEqual(0, board.count_unflip_puck(Board.BLUE))
 
     def test_when_trying_to_initialize_with_pucks_out_of_the_bounds_it_should_only_add_valid_ones(self):
         # GIVEN
@@ -379,12 +380,12 @@ class TestBoard(unittest.TestCase):
         expected_red_puck_position = (2, 0)
 
         print()
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # WHEN
         board.tilt(Board.EAST)
 
         print('After tilt')
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # THEN
         pucks = [node for node, attributes in board.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
@@ -407,12 +408,12 @@ class TestBoard(unittest.TestCase):
         expected_red_puck_position = (2, 0)
 
         print()
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # WHEN
         board.tilt(Board.EAST)
 
         print('After tilt')
-        print(game.draw_board())
+        print(game.renderer.draw_board(game))
         # THEN
         pucks = [node for node, attributes in board.graph.nodes(
             data=True) if attributes.get(Board.PUCK_KEY)]
