@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         self.board = Board()
         self.we_have_a_winner = False
-        self.current_player = Board.RED
+        self.current_player = Board.RED if randrange(2) == 0 else Board.BLUE
         self.renderer = GameRenderer()
 
     def start(self):
