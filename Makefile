@@ -12,3 +12,6 @@ test: ## Run the tests
 
 local-test: ## Run the tests on local machine
 	python3 -m unittest discover -s ./src -v
+
+local-run:
+	python3 ./src/tipsy.py

@@ -394,13 +394,13 @@ class TestBoard(unittest.TestCase):
         self.assertIn(expected_red_puck_position, pucks)
 
     def test_when_one_puck_move_toward_another_with_free_nodes_they_should_both_move(self):
-        game = Game()
         # # # # #    # # # # #
         # O 0   #    #   O 0 #
         #       # => #       #
         #       #    #       #
         # # # # #    # # # # #
         # GIVEN
+        game = Game()
         board = Board(3, 3, obstacles=[], pucks={Board.BLUE: [
                       (0, 0)], Board.RED: [(1, 0)]}, exits=[])
         game.board = board

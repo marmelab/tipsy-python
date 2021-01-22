@@ -2,6 +2,7 @@ from board import Board
 from game_renderer import GameRenderer
 from os import system
 from os import get_terminal_size
+from random import randrange
 
 
 class Game:
@@ -10,7 +11,7 @@ class Game:
     def __init__(self):
         self.board = Board()
         self.we_have_a_winner = False
-        self.current_player = Board.RED
+        self.current_player = Board.RED if randrange(2) == 0 else Board.BLUE
         self.renderer = GameRenderer()
 
     def start(self):
@@ -34,7 +35,14 @@ class Game:
             self.__switch_player_turn()
 
     def __play_command(self, command):
-        self.board.tilt(command)
+        fallen_pucks = self.board.tilt(command)
+        self.__replace_pucks(fallen_pucks)
+
+    def __replace_pucks(self, fallen_pucks):
+        for puck in filter(lambda color: color != Board.BLACK, fallen_pucks):
+            available_nodes = [node for node, attributes in self.board.graph.nodes(
+            data=True) if not attributes.get(Board.PUCK_KEY) and not attributes.get(Board.EXIT_KEY)]
+            self.board.add_puck(available_nodes[randrange(len(available_nodes)-1)], puck, flipped=True)
 
     def __switch_player_turn(self):
         if self.current_player == Board.RED:
